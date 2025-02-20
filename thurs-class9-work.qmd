@@ -1,0 +1,107 @@
+---
+title: "class9-work"
+author: "isha mukundan"
+format: html
+editor: visual
+---
+
+## Pipelining
+
+Need to read in the magrittr library in order to use the pipes %\>%.
+
+```{r}
+#| label: piping
+#| echo: true # show both code and result (not just the result)
+library(magrittr)
+v1 <- 1:9
+v2 <- v1
+
+add1 <- function(x){
+  return(x + 1)
+}
+
+v1 %<>% mean() %>% add1()
+v1
+
+v2 |> mean()
+```
+
+## Package: dplyr
+
+Exercises from Intro to dplyr:
+
+### Row Operations
+
+```{r}
+#| label: dplyr1
+#| warning: false
+#| message: false
+
+library(tidyverse)
+
+dim(starwars)
+starwars
+
+# get a tibble of the star wars characters with brown hair
+starwars[starwars$hair_color == "brown",]
+
+# arrange() is a row operator (reorders from low to high by default)
+starwars |> arrange(height)
+starwars |> arrange(desc(height)) # use desc() to place in descending order instead
+
+```
+
+### Column Operations
+
+```{r}
+colnames(starwars)
+
+liked_cols <- starwars |> select(hair_color, skin_color, eye_color)
+
+# can do the same thing above with the helper function ends_with()
+cols1 <- starwars |> select(ends_with("color"))
+
+```
+
+### Random Operations
+
+Never forget to set the seed when generating random numbers so work can be reproduced especially in group projects.
+
+```{r}
+set.seed(2020)
+runif(100)
+```
+
+### Mutate
+
+Mutate is another useful function to add a variable
+
+```{r}
+#| label: mutate
+
+# use mutate() to add the variable hgt_m (height in meters) to the tibble
+mut1 <- starwars |> select(name, height, mass) |> mutate(hgt_m = height / 100)
+```
+
+## Groups
+
+```{r}
+#| label: groups
+ 
+# tally() can be used to figure out how many of each species is there
+species <- starwars |> group_by(species) |> tally()
+```
+
+## TidyR
+'
+```{r}
+
+relig_income 
+
+# pivot the original table for it to be easier to use for analysis
+relig_income |> pivot_longer(
+  cols = !religion,
+  names_to = "income",
+  values_to = "count"
+  )
+```
